@@ -15,6 +15,9 @@ database phpmyadmin "bioskop"
 	- nama_pembeli (varchar)
 	- jumlah_tiket (int)
 	- kursi (varchar)
+	- userid (int)
+	- tanggal_pembelian (datetime)
+	- created_at (timestamp)
 3. users
 	- id (int)
 	- username (varchar)
@@ -22,3 +25,8 @@ database phpmyadmin "bioskop"
 	- email (varchar)
 	- full_name (varchar)
 	- created_at (timestamp)
+4. admin
+	- id (int)
+	- username (varchar)
+	- password (varchar)
+	- id_karyawan (varchar)
