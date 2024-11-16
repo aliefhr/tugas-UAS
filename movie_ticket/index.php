@@ -1,7 +1,7 @@
 <?php
 session_start(); // Mulai sesi
 
-include 'db.php';
+include 'db.php'; // Menghubungkan ke database
 
 // Cek apakah ada input pencarian
 $search = isset($_GET['search']) ? $_GET['search'] : '';
@@ -35,11 +35,13 @@ if (isset($_GET['logout'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar Film</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
+
         .film-image {
             width: 100%;
-            height: 300px; /* Tetapkan tinggi gambar */
-            object-fit: cover; /* Pastikan gambar terisi penuh tanpa mendistorsi */
+            height: 300px;
+            object-fit: cover;
             border-top-left-radius: 10px;
             border-top-right-radius: 10px;
         }
@@ -49,27 +51,6 @@ if (isset($_GET['logout'])) {
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis;
-        }
-        .table {
-            border: none;
-        }
-        .table td {
-            border: none;
-        }
-        .film-info {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-        .film-details {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-        }
-        .film-actions {
-            text-align: right;
         }
         .card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -82,17 +63,26 @@ if (isset($_GET['logout'])) {
 </head>
 <body>
     <div class="container mt-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4 ">
             <h1 class="text-left">Daftar Film</h1>
             <div>
-                <a href="index.php" class="btn btn-secondary mr-2">Home</a>
-                <?php if (!isset($_SESSION['user_id'])): ?>
-                    <a href="login.php" class="btn btn-primary mr-2">Login</a>
-                    <a href="register.php" class="btn btn-success">Registrasi</a>
-                <?php else: ?>
-                    <span class="btn btn-info">Selamat datang, <?php echo $_SESSION['username']; ?></span>
-                    <a href="index.php?logout=true" class="btn btn-danger ml-2">Logout</a>
-                <?php endif; ?>
+                <!-- Hamburger Menu -->
+                <div class="dropdown">
+                    <button class="btn navbar-toggler dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-bars"></i> <!-- Ikon hamburger -->
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="index.php">Home</a>
+                        <?php if (!isset($_SESSION['user_id'])): ?>
+                            <a class="dropdown-item" href="login.php">Login</a>
+                            <a class="dropdown-item" href="register.php">Registrasi</a>
+                        <?php else: ?>
+                            <span class="dropdown-item disabled">Selamat datang, <?php echo htmlspecialchars($_SESSION['username']); ?></span>
+                            <a class="dropdown-item" href="index.php?logout=true">Logout</a>
+                            <a class="dropdown-item" href="lihat_tiket.php">Lihat Tiket yang Dibeli</a>
+                        <?php endif; ?>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -107,10 +97,10 @@ if (isset($_GET['logout'])) {
 
         <div class="row">
             <?php while ($row = $result->fetch_assoc()): ?>
-                <div class="col-md-4 mb-4"> <!-- Ubah menjadi col-md-4 untuk membuat 3 kolom -->
-                    <div class="card h-100"> <!-- Tambahkan h-100 untuk membuat tinggi card sama -->
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
                         <h5 class="card-title p-3"><?php echo htmlspecialchars($row['judul']); ?></h5>
-                        <img src="<?php echo $row['foto']; ?>" class="film-image card-img-top" alt="<?php echo htmlspecialchars($row['judul']); ?>">
+                        <img src="<?php echo htmlspecialchars($row['foto']); ?>" class="film-image card-img-top" alt ="<?php echo htmlspecialchars($row['judul']); ?>">
                         <div class="card-body d-flex flex-column">
                             <div class="film-details flex-grow-1">
                                 <div>
@@ -125,7 +115,7 @@ if (isset($_GET['logout'])) {
                             </div>
                             <div class="film-actions mt-auto">
                                 <?php if (isset($_SESSION['user_id'])): ?>
-                                    <a href="beli_tiket.php?id=<?php echo $row['id']; ?>" class="btn btn-primary btn-block">Beli Tiket</a>
+                                    <a href="beli_tiket.php?id=<?php echo htmlspecialchars($row['id']); ?>" class="btn btn-primary btn-block" style="background: linear-gradient(to right, #6a11cb, #2575fc); border: none;">Beli Tiket</a>
                                 <?php else: ?>
                                     <a href="login.php" class="btn btn-warning btn-block">Login untuk Beli Tiket</a>
                                 <?php endif; ?>
