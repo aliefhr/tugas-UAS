@@ -4,19 +4,20 @@ session_start();
 
 // Pastikan user_id ada di session
 if (!isset($_SESSION['user_id'])) {
-    // Redirect atau tampilkan pesan error
     die("Anda harus login untuk melihat data pembelian.");
 }
 
 $user_id = $_SESSION['user_id']; // Ambil ID pengguna dari session
 
 // Ambil data tiket yang sudah dibeli dari database
-$stmt = $conn->prepare("SELECT nama_pembeli, jumlah_tiket, kursi, DATE(created_at) as tanggal_pembelian, 
-                         (jumlah_tiket * (SELECT harga FROM film WHERE film.id = tiket.film_id)) AS total_harga 
+$stmt = $conn->prepare("SELECT nama_pembeli, kursi, DATE(created_at) as tanggal_pembelian, 
+                         SUM(jumlah_tiket) AS total_tiket,
+                         SUM(jumlah_tiket * (SELECT harga FROM film WHERE film.id = tiket.film_id)) AS total_harga 
                          FROM tiket 
                          WHERE created_at IS NOT NULL AND user_id = ? 
-                         ORDER BY created_at DESC");
-$stmt->bind_param("i", $user_id); // "i" untuk integer
+                         GROUP BY nama_pembeli, kursi, tanggal_pembelian
+                         ORDER BY tanggal_pembelian DESC");
+$stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
 ?>
@@ -83,7 +84,7 @@ $result = $stmt->get_result();
             while ($row = $result->fetch_assoc()) {
                 echo "<div class='ticket'>";
                 echo "<h5><i class='bi bi-person-circle'></i> Nama Pembeli: " . htmlspecialchars($row['nama_pembeli']) . "</h5>";
-                echo "<div class='details'><i class='bi bi-ticket-detailed'></i> Jumlah Tiket: " . htmlspecialchars($row['jumlah_tiket']) . "</div>";
+                echo "<div class='details'><i class='bi bi-ticket-detailed'></i> Jumlah Tiket: " . htmlspecialchars($row['total_tiket']) . "</div>";
                 echo "<div class='details'><i class='bi bi-chair'></i> Kursi: " . htmlspecialchars($row['kursi']) . "</div>"; 
                 echo "<div class='details'><i class='bi bi-calendar-event'></i> Tanggal Pembelian: " . htmlspecialchars($row['tanggal_pembelian']) . "</div>";
                 echo "<div class='total'><i class='bi bi-currency-dollar'></i> Total Harga: Rp " . number_format($row['total_harga'], 0, ',', '.') . "</div>";
