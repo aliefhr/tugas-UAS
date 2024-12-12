@@ -34,6 +34,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Hapus film
     if (isset($_POST['delete_film'])) {
         $id = (int)$_POST['film_id'];
+        
+        // First, delete related tickets
+        if (!$conn->query("DELETE FROM tiket WHERE film_id=$id")) {
+            $error = "Gagal menghapus tiket terkait: " . $conn->error;
+        }
+    
+        // Then, delete the film
         if (!$conn->query("DELETE FROM film WHERE id=$id")) {
             $error = "Gagal menghapus film: " . $conn->error;
         }
@@ -159,7 +166,7 @@ $result = $conn->query("SELECT * FROM film");
                 </div>
                 <div class="mb-3">
                     <label for="foto" class="form-label">Upload Foto</label>
-                    <input type="file" class="form-control" name="foto" accept="image/*" required>
+                    <input type="file" class="form-control" name="foto" accept="foto/*" required>
                 </div>
                 <div class="mb-3">
                     <label for="deskripsi" class="form-label">Deskripsi</label>
