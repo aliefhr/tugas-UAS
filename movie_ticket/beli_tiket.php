@@ -133,30 +133,51 @@ if (!$film) {
                 <input type="number" name="jumlah_tiket" id="jumlah_tiket" class="form-control" min="1" required>
             </div>
             <h2>Pilih Kursi</h2>
-            <div class="row">
-                <div class="col">
-                    <h3>Sebelah Kiri</h3>
-                    <div class="d-flex flex-wrap justify-content-center">
-                        <?php
-                        for ($i = 1; $i <= 20; $i++) {
-                            $status = in_array($i, $kursi_terisi) ? 'terisi' : 'tersedia';
-                            echo "<div class='kursi $status' data-kursi='$i'>$i</div>";
-                        }
-                        ?>
+                <div class="text-center mb-4">
+                    <div class="screen" style="margin: 20px 0; padding: 10px; background-color: #000; color: white; font-weight: bold;">
+                        Layar
                     </div>
                 </div>
-                <div class="col">
-                    <h3>Sebelah Kanan</h3>
-                    <div class="d-flex flex-wrap justify-content-center">
-                        <?php
-                        for ($i = 21; $i <= 40; $i++) {
-                            $status = in_array($i, $kursi_terisi) ? 'terisi' : 'tersedia';
-                            echo "<div class='kursi $status' data-kursi='$i'>$i</div>";
-                        }
-                        ?>
+                <div class="d-flex flex-column align-items-center">
+                    <div class="baris">
+                        <h3>Baris 1</h3>
+                        <div class="d-flex flex-wrap justify-content-center">
+                            <?php
+                            for ($i = 1; $i <= 10; $i++) {
+                                $status = in_array($i, $kursi_terisi) ? 'terisi' : 'tersedia';
+                                echo "<div class='kursi $status' data-kursi='$i'>$i</div>";
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="baris">
+                        <h3>Baris 2</h3>
+                        <div class="d-flex flex-wrap justify-content-center">
+                            <?php
+                            for ($i = 11; $i <= 20; $i++) {
+                                $status = in_array($i, $kursi_terisi) ? 'terisi' : 'tersedia';
+                                echo "<div class='kursi $status' data-kursi='$i'>$i</div>";
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="baris">
+                        <h3>Baris 3</h3>
+                        <div class="d-flex flex-wrap justify-content-center">
+                            <?php
+                            for ($i = 21; $i <= 30; $i++) {
+                                $status = in_array($i, $kursi_terisi) ? 'terisi' : 'tersedia';
+                                echo "<div class='kursi $status' data-kursi='$i'>$i</div>";
+                            }
+                            ?>
+                        </div>
                     </div>
                 </div>
-            </div>
+                <div class="text-center mt-4">
+                    <div class="entrance" style="margin: 20px 0; padding: 10px; background-color: #007bff; color: white; font-weight: bold;">
+                        Pintu Masuk / Keluar
+                    </div>
+                </div>
             <input type="submit" class="btn btn-primary" value="Beli Tiket" style="background: linear-gradient(to right, #6a11cb, #2575fc); border: none;">
         </form>
         <br>
