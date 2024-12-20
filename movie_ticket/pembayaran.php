@@ -33,18 +33,8 @@ if ($film_id) {
 // Hitung total harga
 $total_harga = $jumlah_tiket * $harga_per_tiket;
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Proses konfirmasi pembayaran
-    echo "<script>alert('Pembayaran berhasil!');</script>";
-    // Redirect ke halaman konfirmasi atau kembali ke halaman utama
-    header("Location: index.php");
-    exit();
-}
-
-//var_dump($kursi);
-
 // Siapkan pesan untuk WhatsApp
-$message = urlencode("Konfirmasi Pembayaran Tiket\n" .
+$message = urlencode("Konfirmasi Pembayaran Tiket\n" . 
     "Nama Pembeli: " . htmlspecialchars($nama_pembeli) . "\n" .
     "Jumlah Tiket: " . htmlspecialchars($jumlah_tiket) . "\n" .
     "Nomor Bangku: " . implode(", ", array_map('htmlspecialchars', $kursi)) . "\n" .
@@ -72,14 +62,14 @@ $whatsapp_url = "https://api.whatsapp.com/send?text=" . $message;
             <p><strong>Harga per Tiket:</strong> Rp <?php echo number_format($harga_per_tiket, 0, ',', '.'); ?></p>
             <p><strong>Total Harga:</strong> Rp <?php echo number_format($total_harga, 0, ',', '.'); ?></p>
             
-            <form method="POST" action="">
+            <!-- Mengubah form action ke 'lihat_tiket.php' -->
+            <form method="POST" action="lihat_tiket.php">
                 <input type="hidden" name="film_id" value="<?php echo htmlspecialchars($film_id); ?>">
                 <input type="hidden" name="jumlah_tiket" value="<?php echo htmlspecialchars($jumlah_tiket); ?>">
                 <input type="hidden" name="nama_pembeli" value="<?php echo htmlspecialchars($nama_pembeli); ?>">
                 <input type="hidden" name="kursi" value="<?php echo htmlspecialchars(json_encode($kursi)); ?>">
                 <input type="submit" class="btn btn-primary" value="Konfirmasi Pembayaran">
                 <a href="download_tiket.php?film_id=<?php echo htmlspecialchars($film_id); ?>&jumlah_tiket=<?php echo htmlspecialchars($jumlah_tiket); ?>&nama_pembeli=<?php echo urlencode($nama_pembeli); ?>&kursi=<?php echo htmlspecialchars(json_encode($kursi)); ?>" class="btn btn-info" target="_blank">Download Tiket</a>
-                <a href="<?php echo $whatsapp_url; ?>" class="btn btn-success" target="_blank">Kirim via WhatsApp</a>
             </form>
         </div>
         <br>
